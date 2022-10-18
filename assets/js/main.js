@@ -37,6 +37,7 @@ buttonEl.addEventListener("click", function () {
 
     let counter = 0;
     let endGame = false;
+    let color = '';
 
     /* Background toggler */
     for (let i = 0; i < cellList.length; i++) {
@@ -45,15 +46,16 @@ buttonEl.addEventListener("click", function () {
         if (bombList.includes(i + 1)) {
             /* pressed a bomb */
             cellEl.addEventListener("click", function () {
-                if (!cellEl.classList.contains("pale_red") && !endGame) {
-                    cellEl.classList.add("pale_red");
+                color = "pale_red";
+                if (!cellEl.classList.contains(color) && !endGame) {
+                    cellEl.classList.add(color);
                     console.log("Bomb: ", i + 1);
 
                     const bombs = document.getElementsByClassName("bomb");
                     // console.log(bombs);
                     for (let j = 0; j < bombs.length; j++) {
                         const bomb = bombs[j];
-                        bomb.classList.add("pale_red");
+                        bomb.classList.add(color);
                     }
 
                     resultEl.innerHTML = "Hai vinto!!";
@@ -64,8 +66,9 @@ buttonEl.addEventListener("click", function () {
         } else {
             /* pressed a cell */
             cellEl.addEventListener("click", function () {
-                if (!cellEl.classList.contains("light_blue") && !endGame) {
-                    cellEl.classList.add("light_blue");
+                color = "light_blue";
+                if (!cellEl.classList.contains(color) && !endGame) {
+                    cellEl.classList.add(color);
                     console.log(i + 1);
 
                     counter++;
