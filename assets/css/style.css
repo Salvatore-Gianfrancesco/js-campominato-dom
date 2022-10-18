@@ -8,6 +8,7 @@
     --light: #f8f9fa;
     --dark: #212529;
     --light-blue: #add8e6;
+    --pale-red: #d87093;
 }
 
 .w_10 {
@@ -41,4 +42,8 @@
 
 .light_blue {
     background-color: var(--light-blue);
+}
+
+.pale_red {
+    background-color: var(--pale-red);
 }

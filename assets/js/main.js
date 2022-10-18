@@ -5,13 +5,25 @@ const checkEl = document.querySelector(".check")
 
 /* Button that generates the grid */
 buttonEl.addEventListener("click", function () {
-    const checkedDifficulty = document.querySelector(".form-check-input:checked").value;
+    const checkedDifficulty = Number(document.querySelector(".form-check-input:checked").value);
     // console.log(checkedDifficulty);
+
+    let bombList = [];
+    while (bombList.length !== 16) {
+        const num = generateRandom(1, checkedDifficulty + 1);
+
+        if (!bombList.includes(num)) {
+            bombList.push(num);
+        }
+    }
+    // console.log(bombList);
+    bombList = sortArray(bombList);
+    console.log(bombList);
 
     gridCreation(checkedDifficulty);
 
     containerEl.classList.remove("d-none");
-    buttonEl.classList.add("d-none");
+    // buttonEl.classList.add("d-none");
     checkEl.classList.add("d-none");
 
     const cellList = document.getElementsByClassName("cell");
@@ -23,13 +35,12 @@ buttonEl.addEventListener("click", function () {
     /* Background toggler */
     for (let i = 0; i < cellList.length; i++) {
         const cellEl = cellList[i];
-        cellEl.addEventListener("click", function () {
-            cellEl.classList.add("light_blue");
-            console.log(i + 1);
 
-            const resultClick = document.querySelector(".col-2 > div");
-            resultClick.innerHTML = i + 1;
-        });
+        if (bombList.includes(i + 1)) {
+            addBgClass(cellEl, "pale_red", i + 1);
+        } else {
+            addBgClass(cellEl, "light_blue", i + 1);
+        }
     }
 });
 
@@ -37,39 +48,32 @@ buttonEl.addEventListener("click", function () {
 /* FUNCTIONS */
 
 function gridCreation(difficulty) {
-    let maxValue;
-    switch (difficulty) {
-        case "hard":
-            maxValue = 100;
-            break;
-        case "medium":
-            maxValue = 81;
-            break;
-        case "easy":
-            maxValue = 49;
-            break;
-    }
-
-    for (let i = 0; i < maxValue; i++) {
+    for (let i = 0; i < difficulty; i++) {
         const cellEl = document.createElement("div");
         cellEl.classList.add("cell");
-        addWidthClass(cellEl, difficulty);
         cellEl.innerText = i + 1;
 
         gridEl.insertAdjacentElement("beforeend", cellEl);
         // console.log(cellEl);
+
+        const cellPerRow = Math.sqrt(difficulty);
+        // console.log(cellPerRow);
+        cellEl.classList.add(`w_${cellPerRow}`);
     }
 }
 
-function addWidthClass(cell, difficulty) {
-    switch (difficulty) {
-        case "hard":
-            cell.classList.add("w_10");
-            break;
-        case "medium":
-            cell.classList.add("w_9");
-            break;
-        case "easy":
-            cell.classList.add("w_7");
-    }
+function addBgClass(element, color, index) {
+    element.addEventListener("click", function () {
+        element.classList.add(color);
+        console.log(index);
+    });
+}
+
+function generateRandom(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+function sortArray(arr) {
+    arr.sort((a, b) => a - b);
+    return arr;
 }
