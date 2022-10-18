@@ -58,7 +58,7 @@ buttonEl.addEventListener("click", function () {
                         bomb.classList.add(color);
                     }
 
-                    resultEl.innerHTML = "Hai vinto!!";
+                    resultEl.innerHTML = "Hai perso!!";
                     endGame = true;
                     restartEl.classList.remove("d-none");
                 }
@@ -89,6 +89,11 @@ buttonEl.addEventListener("click", function () {
 
 /* FUNCTIONS */
 
+/**
+ * 
+ * @param {number} difficulty the number of elements in the grid
+ * @param {element} bombList the list of bombs
+ */
 function gridCreation(difficulty, bombList) {
     for (let i = 0; i < difficulty; i++) {
         const cellEl = document.createElement("div");
@@ -108,10 +113,21 @@ function gridCreation(difficulty, bombList) {
     }
 }
 
+/**
+ * 
+ * @param {number} min the lower limit of the range
+ * @param {number} max the upper limit of the range
+ * @returns the random number generated between min and max
+ */
 function generateRandom(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
+/**
+ * 
+ * @param {Array<number>} arr the array to be ordered
+ * @returns the ordered array
+ */
 function sortArray(arr) {
     arr.sort((a, b) => a - b);
     return arr;
