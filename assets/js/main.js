@@ -1,7 +1,10 @@
 const containerEl = document.querySelector(".container");
 const gridEl = document.querySelector(".grid");
 const buttonEl = document.querySelector("button");
-const checkEl = document.querySelector(".check")
+const checkEl = document.querySelector(".check");
+const scoreEl = document.querySelector(".score");
+const resultEl = document.querySelector(".game_result");
+const restartEl = document.querySelector(".restart");
 
 /* Button that generates the grid */
 buttonEl.addEventListener("click", function () {
@@ -20,10 +23,10 @@ buttonEl.addEventListener("click", function () {
     bombList = sortArray(bombList);
     console.log(bombList);
 
-    gridCreation(checkedDifficulty);
+    gridCreation(checkedDifficulty, bombList);
 
     containerEl.classList.remove("d-none");
-    // buttonEl.classList.add("d-none");
+    buttonEl.classList.add("d-none");
     checkEl.classList.add("d-none");
 
     const cellList = document.getElementsByClassName("cell");
@@ -32,14 +35,50 @@ buttonEl.addEventListener("click", function () {
     // console.log(cellList[80]);
     // console.log(cellList[99]);
 
+    let counter = 0;
+    let endGame = false;
+
     /* Background toggler */
     for (let i = 0; i < cellList.length; i++) {
         const cellEl = cellList[i];
 
         if (bombList.includes(i + 1)) {
-            addBgClass(cellEl, "pale_red", i + 1);
+            /* pressed a bomb */
+            cellEl.addEventListener("click", function () {
+                if (!cellEl.classList.contains("pale_red") && !endGame) {
+                    cellEl.classList.add("pale_red");
+                    console.log("Bomb: ", i + 1);
+
+                    const bombs = document.getElementsByClassName("bomb");
+                    // console.log(bombs);
+                    for (let j = 0; j < bombs.length; j++) {
+                        const bomb = bombs[j];
+                        bomb.classList.add("pale_red");
+                    }
+
+                    resultEl.innerHTML = "Hai vinto!!";
+                    endGame = true;
+                    restartEl.classList.remove("d-none");
+                }
+            });
         } else {
-            addBgClass(cellEl, "light_blue", i + 1);
+            /* pressed a cell */
+            cellEl.addEventListener("click", function () {
+                if (!cellEl.classList.contains("light_blue") && !endGame) {
+                    cellEl.classList.add("light_blue");
+                    console.log(i + 1);
+
+                    counter++;
+                    if (counter < checkedDifficulty - 16) {
+                        scoreEl.innerHTML = counter;
+                    } else {
+                        resultEl.innerHTML = "Hai vinto!!";
+                        scoreEl.innerHTML = counter;
+                        endGame = true;
+                        restartEl.classList.remove("d-none");
+                    }
+                }
+            });
         }
     }
 });
@@ -47,7 +86,7 @@ buttonEl.addEventListener("click", function () {
 
 /* FUNCTIONS */
 
-function gridCreation(difficulty) {
+function gridCreation(difficulty, bombList) {
     for (let i = 0; i < difficulty; i++) {
         const cellEl = document.createElement("div");
         cellEl.classList.add("cell");
@@ -59,14 +98,11 @@ function gridCreation(difficulty) {
         const cellPerRow = Math.sqrt(difficulty);
         // console.log(cellPerRow);
         cellEl.classList.add(`w_${cellPerRow}`);
-    }
-}
 
-function addBgClass(element, color, index) {
-    element.addEventListener("click", function () {
-        element.classList.add(color);
-        console.log(index);
-    });
+        if (bombList.includes(i + 1)) {
+            cellEl.classList.add("bomb");
+        }
+    }
 }
 
 function generateRandom(min, max) {
